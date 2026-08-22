@@ -15,7 +15,7 @@ This repository contains browser automation practice tests built with Playwright
 ├── tests/
 │   ├── Practice.spec.js
 │   ├── Ecomm.spec.js
-│   └── EcommerceAug.spec.js
+│   └── EcommerceApp.spec.js
 ├── playwright.config.ts
 ├── package.json
 ├── package-lock.json

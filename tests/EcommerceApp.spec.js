@@ -97,7 +97,7 @@ test ('login' , async ({page}) => {
 
     await expect(page.locator(".col-title + div")).toContainText(newOrderID);
 
-    await page.screenshot({path : "testScreenshot/viewOrder.png"});
+    await page.screenshot({path : "testScreenshots/viewOrder.png"});
 
     await page.locator("button[routerlink*='/myorders']").click();
 
