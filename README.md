@@ -1,42 +1,45 @@
 # Playwright Practice
 
-This repository contains browser automation practice tests built with Playwright. The project focuses on end-to-end UI validation for e-commerce and form automation scenarios using Rahul Shetty Academy demo sites.
+This repository contains Playwright automation practice tests for e-commerce and form interactions using Rahul Shetty Academy demo pages.
 
 ## Tech Stack
 
 - Playwright
 - JavaScript
 - Node.js
+- HTML report generation
 
 ## Project Structure
 
 ```bash
 .
-├── tests/
-│   ├── Practice.spec.js
-│   ├── Ecomm.spec.js
-│   └── EcommerceApp.spec.js
-├── playwright.config.ts
+├── .github/
+├── .gitignore
+├── README.md
 ├── package.json
 ├── package-lock.json
-├── screenshot.png
-├── screenshotProduct.png
-├── checkoutPage.png
-├── element.png
-└── README.md
+├── playwright.config.ts
+├── test-results/
+├── playwright-report/
+├── testScreenshots/
+├── tests/
+│   ├── Ecomm.spec.js
+│   ├── EcommerceApp.spec.js
+│   └── ProtoCommerce.spec.js
+└── node_modules/
 ```
 
-## Features Covered
+## Included Practice Scenarios
 
-- Login flow validation
-- Product search and cart flow
-- Checkout process automation
-- Form interaction and dropdown practice
-- Screenshot capture for visual validation
+- Product browsing and cart flow
+- Form validation and input handling
+- Checkout flow automation
+- Dropdowns, radio buttons, checkboxes, and selectors
+- Screenshot capture during test execution
 
 ## Prerequisites
 
-- Node.js 18 or newer
+- Node.js 18+
 - npm
 
 ## Installation
@@ -47,39 +50,45 @@ npm install
 
 ## Running Tests
 
-Run all Playwright tests:
+Run all tests:
 
 ```bash
 npx playwright test
 ```
 
-Run a specific spec file:
+Run a specific file:
 
 ```bash
-npx playwright test tests/Practice.spec.js
+npx playwright test tests/ProtoCommerce.spec.js
 ```
 
-Open the Playwright HTML report:
+Run in headed mode:
+
+```bash
+npx playwright test --headed
+```
+
+Open the HTML report:
 
 ```bash
 npx playwright show-report
 ```
 
+## Browser Configuration
+
+The project is configured in `playwright.config.ts` to use Chromium with `headless: false` for local visual debugging.
+
 ## Notes
 
-- The project is configured to run Chromium in headed mode by default in `playwright.config.ts`.
-- The tests use public demo websites for learning and practice.
-- Generated screenshots and Playwright reports are stored in the project root and `playwright-report/`.
+- Generated test artifacts such as `test-results/`, `playwright-report/`, and screenshots under `testScreenshots/` are ignored by Git via `.gitignore`.
+- These tests use public demo websites for learning and practice.
 
-## GitHub Upload
-
-To upload this project to GitHub:
+## Useful Git Commands
 
 ```bash
-git init
+git status
 git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin <your-repository-url>
-git push -u origin main
+git commit -m "Add Playwright practice tests"
+git push origin main
 ```
+
