@@ -2,11 +2,12 @@ import { test, expect} from "@playwright/test"
 
 test ('login' , async ({page}) => {
 
+    const email = "testable@gmail.com";
     await page.goto('https://rahulshettyacademy.com/client/#/dashboard/dash', {
         waitUntil : 'domcontentloaded'
     });
 
-    await page.locator('#userEmail').fill('testable@gmail.com');
+    await page.locator('#userEmail').fill(email);
     await page.locator('#userPassword').fill('Testable@123');
     await page.locator('#login').click();
 
@@ -67,8 +68,45 @@ test ('login' , async ({page}) => {
             break;
         }
     }
-
+    await expect(await page.locator(".user__name label")).toHaveText(email);
     await page.screenshot({path : 'testScreenshots/payment.png'});
 
+    await page.locator(".action__submit").click();
+
+    //page.pause();
+
+    await page.locator(".hero-primary").waitFor();
+    const confirmationPageHeader = await page.locator(".hero-primary").textContent();
+    expect(confirmationPageHeader).toMatch(" Thankyou for the order. ")
+    await page.screenshot({path : 'testScreenshots/confirmation.png'});
+    let newOrderID = await page.locator(".em-spacer-1 .ng-star-inserted").textContent();
+    newOrderID = newOrderID.replace(/\|/g, "").replace(" ", "").trim();
+    console.log(newOrderID);
+
+    await page.locator("button[routerlink*='/myorders']").click();
+
+
+    const orderCount = await page.locator("[scope='row']").count();
+    for(let i=0;i<orderCount; i++){
+        const orderID = await page.locator("[scope='row']").nth(i).textContent();
+        if(newOrderID.includes(orderID)){
+            await page.locator("[scope='row'] ~ td > button:has-text('View')").nth(i).click();
+            break;
+        }
+    }
+
+    await expect(page.locator(".col-title + div")).toContainText(newOrderID);
+
+    await page.screenshot({path : "testScreenshot/viewOrder.png"});
+
+    await page.locator("button[routerlink*='/myorders']").click();
+
+    for(let i=0;i<orderCount; i++){
+        const orderID = await page.locator("[scope='row']").nth(i).textContent();
+        if(newOrderID.includes(orderID)){
+            await page.locator("[scope='row'] ~ td > button:has-text('Delete')").nth(i).click();
+            break;
+        }
+    }
 
 });
