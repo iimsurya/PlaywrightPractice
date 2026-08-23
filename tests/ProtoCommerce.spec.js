@@ -2,6 +2,8 @@ import {test, expect} from "@playwright/test";
 
 test('HomePage form', async ({page}) => {
 
+    //test level wait
+    const alteredSixSecondExpect = expect.configure({timeout: 6000})
     await page.goto("https://rahulshettyacademy.com/angularpractice/");
     await page.getByLabel("Check me out if you Love IceCreams!").click();
     await page.getByLabel("Employed").check();
@@ -16,7 +18,11 @@ test('HomePage form', async ({page}) => {
 
     await page.getByRole("link", {name : "Shop"}).click();
 
+    // Element level wait
+    //await alteredSixSecondExpect (page.locator("h1.my-41")).toBeVisible(); //{timeout : 7000}
+
     await page.locator("app-card").filter({hasText : "Nokia Edge"}).getByRole("button").click();
+
     }
 
 )
