@@ -1,27 +1,22 @@
-import { test } from '@playwright/test';
+import {expect, test} from "@playwright/test";
 
-test('Place Order', async ({ page }) => {
-  await page.goto('https://rahulshettyacademy.com/client/#/dashboard/dash', {
-    waitUntil: 'domcontentloaded',
+test('Shopping Application', async ({page}) => {
+
+  await page.goto("https://rahulshettyacademy.com/client/#/auth/login", {
+    waitUntil: "domcontentloaded"
   });
+  const email = "testable@gmail.com";
+  await page.getByPlaceholder("email@example.com").fill(email);
+  await page.getByPlaceholder("enter your passsword").fill("Testable@123");
+  await page.getByRole("button", {name:"login"}).click();
 
-  await page.locator('#userEmail').fill('testable@gmail.com');
-  await page.locator('#userPassword').fill('Testable@123');
+  await page.waitForEvent("load");
+  expect(await page.title()).toMatch("Let's Shop");
 
-  await page.locator('#login').click();
+  const productToSearch = "ADIDAS ORIGINAL";
+  const addBtn = page.locator('.card-body', { hasText: productToSearch }).getByRole('button', { name: /add to cart/i });
+  await expect(addBtn).toBeVisible();
+  await addBtn.scrollIntoViewIfNeeded();
+  await addBtn.click();
 
-  await page.waitForLoadState('networkidle');
-
-  const productToSearch = 'iPhone17 Pro';
-  const products = page.locator('.card-body');
-  const productCount = await products.count();
-
-  for (let i = 0; i < productCount; i++) {
-    const productName = await products.nth(i).locator('b').textContent();
-
-    if (productName?.trim() === productToSearch) {
-      await products.nth(i).locator('i').click();
-      break;
-    }
-  }
-});
+})
