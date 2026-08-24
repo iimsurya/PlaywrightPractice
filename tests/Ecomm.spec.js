@@ -1,7 +1,8 @@
 import {expect, test} from "@playwright/test";
 
-test('Shopping Application', async ({page}) => {
+test('Shopping Application - Delete from cart', async ({page}) => {
 
+  test.setTimeout(15000);
   await page.goto("https://rahulshettyacademy.com/client/#/auth/login", {
     waitUntil: "domcontentloaded"
   });
@@ -14,9 +15,25 @@ test('Shopping Application', async ({page}) => {
   expect(await page.title()).toMatch("Let's Shop");
 
   const productToSearch = "ADIDAS ORIGINAL";
-  const addBtn = page.locator('.card-body', { hasText: productToSearch }).getByRole('button', { name: /add to cart/i });
-  await expect(addBtn).toBeVisible();
-  await addBtn.scrollIntoViewIfNeeded();
-  await addBtn.click();
+  //const addBtn =
+  await page.locator('.card-body', { hasText: productToSearch }).getByRole('button', { name: " Add To Cart" }).click();
+  // await expect(addBtn).toBeVisible();
+  // await addBtn.scrollIntoViewIfNeeded();
+  // await addBtn.click();
+
+  await page.locator(".btn-custom", {hasText: "  Cart "}).click()
+
+  const productNames = await page.locator(".cartSection h3");
+  for(let i=0; i < await productNames.count(); i++){
+    if((await productNames.nth(i).textContent()).match(productToSearch)){
+      await page.locator(".btn-danger").nth(i).click();
+      break;
+    }
+  }
+
+  const deleteProduct = await page.getByLabel("No Product in Your Cart").textContent();
+      //await page.locator("div[aria-label='No Product in Your Cart']").textContent();
+  console.log(deleteProduct);
+  expect(deleteProduct).toMatch("No Product in Your Cart");
 
 })

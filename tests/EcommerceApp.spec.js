@@ -1,6 +1,6 @@
 import { test, expect} from "@playwright/test"
 
-test ('login' , async ({page}) => {
+test ('Shopping Application - Successful order' , async ({page}) => {
 
     const email = "testable@gmail.com";
     await page.goto('https://rahulshettyacademy.com/client/#/dashboard/dash', {
