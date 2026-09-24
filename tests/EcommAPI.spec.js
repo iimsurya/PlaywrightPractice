@@ -1,8 +1,8 @@
 import {test, expect, request} from "@playwright/test";
 
 const loginData = {userEmail: "testable@gmail.com", userPassword: "Testable@123"};
-
-test( 'Login using API', async () => {
+let token;
+test.beforeEach( 'Login using API', async () => {
 //test(async () => {
     const loginAPIContext = await request.newContext();
     const loginResponse = await loginAPIContext.post('https://rahulshettyacademy.com/api/ecom/auth/login',
@@ -12,7 +12,16 @@ test( 'Login using API', async () => {
     )
     expect(loginResponse.ok()).toBeTruthy();
     const loginResponseJSON = await loginResponse.json();
-    const token = loginResponseJSON.token;
+    token = loginResponseJSON.token;
     console.log(token);
 });
 
+test('Login',async ({page}) =>
+{
+    await page.addInitScript( value => {
+            window.localStorage.setItem('token', value);
+    }, token);
+    await page.pause();
+    await page.goto('https://rahulshettyacademy.com/client/#/dashboard/dash');
+
+})
