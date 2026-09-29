@@ -3,7 +3,7 @@ import {test, expect, request} from "@playwright/test";
 const loginData = {userEmail: "testable@gmail.com", userPassword: "Testable@123"};
 const orderData = {orders: [{country: "Argentina", productOrderedId: "6960eae1c941646b7a8b3ed3"}]};
 let token;
-let orderID;
+let newOrderID;
 
 test.beforeEach( 'Login using API', async () => {
 //test(async () => {
@@ -37,7 +37,33 @@ test('Login',async ({page}) =>
             },
         })
         const orderResponseJSON = await orderResponse.json();
-        orderID = orderResponseJSON.orders;
-        console.log(orderID);
+    newOrderID = orderResponseJSON.orders;
+        console.log(newOrderID);
+
+    await page.locator("button[routerlink*='/myorders']").click();
+
+
+    const orderCount = await page.locator("[scope='row']").count();
+    for(let i=0;i<orderCount; i++){
+        const orderID = await page.locator("[scope='row']").nth(i).textContent();
+        if(newOrderID.includes(orderID)){
+            await page.locator("[scope='row'] ~ td > button:has-text('View')").nth(i).click();
+            break;
+        }
+    }
+
+    await expect(page.locator(".col-title + div")).toContainText(newOrderID);
+
+    await page.screenshot({path : "testScreenshots/viewOrder.png"});
+
+    await page.locator("button[routerlink*='/myorders']").click();
+
+    for(let i=0;i<orderCount; i++){
+        const orderID = await page.locator("[scope='row']").nth(i).textContent();
+        if(newOrderID.includes(orderID)){
+            await page.locator("[scope='row'] ~ td > button:has-text('Delete')").nth(i).click();
+            break;
+        }
+    }
 
 })
