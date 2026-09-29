@@ -1,45 +1,30 @@
 import {test, expect, request} from "@playwright/test";
+const {APIUtils} = require("./APIUtils");
 
 const loginData = {userEmail: "testable@gmail.com", userPassword: "Testable@123"};
 const orderData = {orders: [{country: "Argentina", productOrderedId: "6960eae1c941646b7a8b3ed3"}]};
-let token;
-let newOrderID;
 
-test.beforeEach( 'Login using API', async () => {
-//test(async () => {
-    const loginAPIContext = await request.newContext();
-    const loginResponse = await loginAPIContext.post('https://rahulshettyacademy.com/api/ecom/auth/login',
-        {
-            data: loginData
-        }
-    )
-    expect(loginResponse.ok()).toBeTruthy();
-    const loginResponseJSON = await loginResponse.json();
-    token = loginResponseJSON.token;
-    console.log(token);
+let response;
+
+test.beforeAll( 'Login using API', async () => {
+
+    const apiContext = await request.newContext();
+    const apiUtils = new APIUtils(apiContext, loginData);
+    response = await apiUtils.placeOrder(orderData);
+
 });
 
-test('Login',async ({page}) =>
+
+test.only('Login',async ({page}) =>
 {
+
     await page.addInitScript( value => {
             window.localStorage.setItem('token', value);
-    }, token);
+    }, response.token);
     await page.pause();
     await page.goto('https://rahulshettyacademy.com/client/#/dashboard/dash');
 
-    const placeOrderContext = await request.newContext();
-   const orderResponse = await placeOrderContext.post('https://rahulshettyacademy.com/api/ecom/order/create-order',
-        {
-            data: orderData,
-            headers: {
-                'Authorization': token,
-                'Content-Type': 'Application/json'
-            },
-        })
-        const orderResponseJSON = await orderResponse.json();
-    newOrderID = orderResponseJSON.orders;
-        console.log(newOrderID);
-
+    const newOrderID = response.orderID;
     await page.locator("button[routerlink*='/myorders']").click();
 
 
