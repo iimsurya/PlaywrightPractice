@@ -2,7 +2,9 @@
   "name": "playwrightpractice",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "npx playwright test EcommAPI.spec.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
