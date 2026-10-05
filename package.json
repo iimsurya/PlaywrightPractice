@@ -11,6 +11,11 @@
   "description": "",
   "devDependencies": {
     "@playwright/test": "^1.61.1",
-    "@types/node": "^26.0.1"
+    "@types/node": "^26.0.1",
+    "excel": "^1.0.1",
+    "js": "^0.1.0"
+  },
+  "dependencies": {
+    "exceljs": "4.4.1-prerelease.0"
   }
 }
